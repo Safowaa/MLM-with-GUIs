@@ -1,6 +1,0 @@
-# SQL Server database connection details
-SERVER: dap-projects-database.database.windows.net
-DATABASE: dapDB
-USERNAME: LP2_project
-PASSWORD: Stat$AndD@t@Rul3
-DRIVER: "{ODBC Driver 17 for SQL Server}"
