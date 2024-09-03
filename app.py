@@ -1,8 +1,11 @@
 import streamlit as st
 
 # Set page configuration
-st.set_page_config(page_title="Churn Prediction App", layout="wide")
-
+st.set_page_config(
+    page_title="Japan Machine Training Ltd (TCCPA)", 
+    page_icon="logo/Logo.png",
+    layout="wide"
+)
 # Sidebar for navigation
 st.sidebar.title("Menu")
 

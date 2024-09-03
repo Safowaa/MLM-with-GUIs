@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: safs_machine_container
+    volumes:
+      - safs_machine:/usr/app/src
+    ports:
+      - "8501:8501"
+    environment:
+      - LANG="en_US.UTF-8"
+      - LC_ALL="en_US.UTF-8"
+    command: ["streamlit", "run", "app.py"]
+
+volumes:
+  safs_machine:
+    external: true

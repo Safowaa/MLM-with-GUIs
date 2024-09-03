@@ -9,7 +9,6 @@ def main_page():
     with col2:
         st.markdown("<h1 style='font-size: 58px;'>Japan Machine Training Ltd</h1>", unsafe_allow_html=True)
 
-
     st.write(""" 
         ### Japan Machine Training Ltd is an IT company that trains all types of machine learning models on different and diverse data for general and specific areas. At Japan Machine Training Ltd, we build and train! There is no impossible insight.
     """)
@@ -19,6 +18,36 @@ def main_page():
     st.write("""
         ### We are a team of Data analysts trained in the data world. Each individual on this team has honed their skills to be able to serve you. With diverse backgrounds, we bring you insights from all corners of the world.
     """)
+
+    # Create two columns for additional sections
+    col1, col2 = st.columns(2)
+
+    # Column 1 content
+    with col1:
+        st.write("### Key Features")
+        st.write("- **View Data** - Allows you to access the data in a remote database via connection")
+        st.write("- **Dashboard** - Contains Data Visualization")
+        st.write("- **Predict** - Allows you to view predictions in real-time")
+
+        st.write("### User Benefits")
+        st.write("- Make data-driven decisions effortlessly.")
+        st.write("- Harness the power of machine learning without the complexity.")
+
+    # Column 2 content
+    with col2:
+        st.write("### How to run application")
+        st.code("""
+# Activate virtual environment
+virtual/scripts/activate
+
+streamlit run app.py
+""", language='bash')
+
+        st.write("### Machine Learning Integration.")
+        st.write("- You have access to select between 2 models for prediction.")
+        st.write("- Simple integration and user-friendly interface.")
+        st.write("- View predictions made in history.")
+        st.write("- Get probability of predictions in real time.")
 
     st.write("### Meet the Team")
     # Create two columns for the Team
@@ -42,22 +71,22 @@ def main_page():
     st.markdown("""
     <div style="display: flex; justify-content: space-evenly;">
         <a href="https://github.com/Safowaa" target="_blank">
-            <button style="background-color:#D8C04E; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
+            <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
             GitHub
             </button>
         </a>
         <a href="www.linkedin.com/in/benedicta-safowaa-asumaning/" target="_blank">
-            <button style="background-color:#D8C04E; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
+            <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
             LinkedIn
             </button>
         </a>
         <a href="https://app.powerbi.com/groups/me/reports/a814a603-ddbe-4f36-8c6e-674ecd59f05b/ReportSection?experience=power-bi" target="_blank">
-            <button style="background-color:#D8C04E; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
+            <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
             PowerBI
             </button>
         </a>
         <a href="https://medium.com/@safowaabenedicta/telco-customer-attrition-analysis-faae3476c6fb" target="_blank">
-            <button style="background-color:#D8C04E; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
+            <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
             Medium
             </button>
         </a>
@@ -71,3 +100,4 @@ def main_page():
 # Run the main page function
 if __name__ == "__main__":
     main_page()
+

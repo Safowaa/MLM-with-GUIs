@@ -85,7 +85,7 @@ def dashboard_page():
         st.write("Interact and view more insights on PowerBI using the link below")
         st.markdown("""
         <a href="https://app.powerbi.com/groups/me/reports/a814a603-ddbe-4f36-8c6e-674ecd59f05b/ReportSection?experience=power-bi" target="_blank">
-        <button style="background-color:#D8C04E; color:black; border:none; padding:10px 90px; text-align:center; font-size:16px; margin:2px; cursor:pointer; border-radius:5px;">
+        <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:16px; margin:2px; cursor:pointer; border-radius:5px;">
         PowerBI
         </button>
         """, unsafe_allow_html=True)

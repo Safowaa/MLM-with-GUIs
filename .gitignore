@@ -135,7 +135,7 @@ venv.bak/
 /virtual/
 /users.yaml
 /prediction_history.yaml
-/config.yaml
+/config/
 
 
 

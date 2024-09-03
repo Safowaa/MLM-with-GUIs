@@ -38,6 +38,14 @@ def predict_page():
         st.markdown("<h1 style='font-size: 58px;'>Japan Machine Training Ltd</h1>", unsafe_allow_html=True)
         
     st.write(" ## Determin if your customer will or will not churn.")
+    
+    st.write(" ##### Please Note: The CSV / Excel file you upload should have strictly the below.")
+    st.write("""
+    <p style="color:red;">
+        The following columns should have these features Yes/No only, Senior Citizen, Partner, Dependents, Phone Service, Multiple Lines, Online Security, Online Backup, Device Protection, Tech Support, Streaming TV, Streaming Movies, and Paperless Billing. The numeric columns are: Tenure (Months), Monthly Charges, and Total Charges. Other columns, Gender should have Male and Female, Internet Service should have DSL, Fiber Optic, and No, Contract should have Month-to-Month, One year, and Two year, Payment Method should have Electronic check, Mailed check, and Bank transfer.
+    </p>
+           """, unsafe_allow_html=True)
+
 
     # Model selection
     st.write(" ### Choose a model to use for prediction:")
