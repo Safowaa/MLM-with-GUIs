@@ -8,8 +8,8 @@ st.set_page_config(
 )
 # Sidebar for navigation
 st.sidebar.title("Menu")
-
 # Define the available pages
+
 pages = {
     "📑Login": "login.py",
     "🛖Home": "app_pages/main_page.py",

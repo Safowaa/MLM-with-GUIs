@@ -2,7 +2,7 @@ pip==24.2
 setuptools==65.5.0
 wheel
 numpy==1.26.4
-pandas==2.0.3
+pandas==1.5.3
 scipy==1.13.1
 scikit-learn==1.5.1
 matplotlib==3.8.0
