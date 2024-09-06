@@ -16,7 +16,7 @@ def download_users_yaml_from_s3():
 
     try:
         s3_client.download_file(s3_bucket_name, s3_file_key, 'users.yaml')
-        st.write("Successfully downloaded users.yaml from S3.")
+        # st.write("Successfully downloaded users.yaml from S3.")
     except Exception as e:
         st.error(f"Error downloading users.yaml from S3: {e}")
 
