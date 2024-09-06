@@ -3,6 +3,23 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
+import boto3
+from io import BytesIO
+import os
+
+# S3 Setup
+s3_client = boto3.client('s3')
+BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+
+# Function to load CSV from S3
+def load_csv_from_s3(file_key):
+    try:
+        obj = s3_client.get_object(Bucket=BUCKET_NAME, Key=file_key)
+        data = pd.read_csv(BytesIO(obj['Body'].read()))
+        return data
+    except Exception as e:
+        st.error(f"Error loading CSV from S3: {e}")
+        return None
 
 def dashboard_page():
     # Set the logo and title
@@ -17,8 +34,11 @@ def dashboard_page():
     st.write(" ##### Visualizations From Python Notebooks and The Projects PowerBI Dashboard")
     st.write("Analysis was performed to understand the distribution of data, detect anomalies, and identify relationships between features.")
     
-    # Load data
-    data = pd.read_csv(r'data_files\train_data.csv')
+    # Load data from S3
+    data = load_csv_from_s3("data_files/train_data.csv")
+    
+    if data is None:
+        st.stop()
 
     # Line chart: Tenure over MonthlyCharges
     st.write(" ### Line Chart of Tenure over Monthly Charges")
@@ -59,28 +79,25 @@ def dashboard_page():
 
     # List of image paths (after the charts)
     image_paths = [
-        r"dashboard_images\Dashboard.png",
-        r"dashboard_images\churn_by_contract_type.png",
-        r"dashboard_images\churn_by_tech_support.png",
-        r"dashboard_images\churn_by_seniorCitizen.png",
-        r"dashboard_images\churn_by_gender.png",
-        r"dashboard_images\correlation_numeric.png",
-        r"dashboard_images\churn.png",
-        r"dashboard_images\Tenure_by_churn.png",
-        r"dashboard_images\churn_by_internet.png"
+        r"dashboard_images/Dashboard.png",
+        r"dashboard_images/churn_by_contract_type.png",
+        r"dashboard_images/churn_by_tech_support.png",
+        r"dashboard_images/churn_by_seniorCitizen.png",
+        r"dashboard_images/churn_by_gender.png",
+        r"dashboard_images/correlation_numeric.png",
+        r"dashboard_images/churn.png",
+        r"dashboard_images/Tenure_by_churn.png",
+        r"dashboard_images/churn_by_internet.png"
     ]
 
     # Placeholder for the image
     image_placeholder = st.empty()
-    
-    
 
     # Endless slideshow loop
     while True:
         for image_path in image_paths:
             image_placeholder.image(image_path, use_column_width=True)
             time.sleep(10)  # Display each image for 10 seconds
-            
             
         st.write("Interact and view more insights on PowerBI using the link below")
         st.markdown("""
@@ -97,3 +114,4 @@ def dashboard_page():
 # Run the dashboard
 if __name__ == "__main__":
     dashboard_page()
+
