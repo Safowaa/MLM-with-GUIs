@@ -2,16 +2,29 @@ import streamlit as st
 import pandas as pd
 import joblib
 import yaml
+import boto3
+from io import BytesIO
+import os
+
+# S3 Setup
+s3_client = boto3.client('s3')
+BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+
+def load_prediction_history():
+    try:
+        # Download the prediction history YAML from S3
+        obj = s3_client.get_object(Bucket=BUCKET_NAME, Key="prediction_history.yaml")
+        history = yaml.safe_load(obj['Body']) or []
+    except s3_client.exceptions.NoSuchKey:
+        history = []
+    except Exception as e:
+        st.error(f"Error downloading prediction history from S3: {e}")
+        history = []
+    return history
 
 def save_prediction_to_history(input_data, y_pred, model_choice):
-    # Load the existing history
-    try:
-        with open("prediction_history.yaml", "r") as file:
-            history = yaml.safe_load(file)
-            if history is None:
-                history = []
-    except FileNotFoundError:
-        history = []
+    # Load the existing history from S3
+    history = load_prediction_history()
 
     # Prepare the prediction record
     input_data['Predicted_Churn'] = ['Yes' if x == 1 else 'No' for x in y_pred]
@@ -23,9 +36,12 @@ def save_prediction_to_history(input_data, y_pred, model_choice):
     # Append the new prediction to history
     history.append(prediction_record)
 
-    # Save the updated history
-    with open("prediction_history.yaml", "w") as file:
-        yaml.safe_dump(history, file)
+    # Save the updated history to S3
+    try:
+        history_yaml = yaml.safe_dump(history)
+        s3_client.put_object(Bucket=BUCKET_NAME, Key="prediction_history.yaml", Body=history_yaml)
+    except Exception as e:
+        st.error(f"Error saving prediction history to S3: {e}")
 
 def predict_page():
     
@@ -46,16 +62,14 @@ def predict_page():
     </p>
            """, unsafe_allow_html=True)
 
-
     # Model selection
     st.write(" ### Choose a model to use for prediction:")
-    model_choice = st.radio("First and Second Best Performing Models", ("Logistic Regression", "Random Forest")
-    )
+    model_choice = st.radio("First and Second Best Performing Models", ("Logistic Regression", "Random Forest"))
 
     # File upload option
     file_choice = st.radio(
         "Choose a file input method:",
-        ("Upload a CSV or Excel file","Use existing Excel file")
+        ("Upload a CSV or Excel file", "Use existing Excel file")
     )
 
     # Load the preprocessor pipeline
