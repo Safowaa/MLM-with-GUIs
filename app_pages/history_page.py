@@ -22,15 +22,13 @@ def load_history_from_s3():
         response = s3.get_object(Bucket=bucket_name, Key=s3_file_name)
         file_content = response['Body'].read().decode('utf-8')
         history = yaml.safe_load(file_content)
-        return history
-
+        return history or []  # Return an empty list if no history
     except s3.exceptions.NoSuchKey:
         st.error("Prediction history file not found in S3.")
-        return None
+        return []
     except (NoCredentialsError, ClientError) as e:
         st.error(f"Error downloading prediction history from S3: {str(e)}")
-        return None
-
+        return []
 
 def history_page():
     # Set the logo and title
@@ -42,20 +40,35 @@ def history_page():
         st.markdown("<h1 style='font-size: 58px;'>Japan Machine Training Ltd</h1>", unsafe_allow_html=True)
 
     st.write(" ### Prediction History")
-    
+
     # Load the history from S3
     history = load_history_from_s3()
-    if history is None or len(history) == 0:
+
+    if not history:
         st.write("No prediction history found.")
         return
 
+    # Implementing pagination
+    page_size = 5  # Number of records to show per page
+    total_predictions = len(history)
+    total_pages = (total_predictions + page_size - 1) // page_size  # Calculate total pages
+
+    # Add a slider to let the user choose the page
+    current_page = st.slider("Page", 1, total_pages, 1)
+
+    # Get the predictions for the current page
+    start_idx = (current_page - 1) * page_size
+    end_idx = start_idx + page_size
+    predictions_to_show = history[start_idx:end_idx]
+
     # Display the prediction history
-    for i, record in enumerate(history):
-        st.write(f"### Prediction {i+1}")
+    for i, record in enumerate(predictions_to_show, start=start_idx + 1):
+        st.write(f"### Prediction {i}")
         st.write(f"**Model Used:** {record['model']}")
         st.write("**Predictions:**")
         st.write(pd.DataFrame(record['data']))
 
+    st.write(f"Showing page {current_page} of {total_pages}")
     st.write("---")
     st.write("© 2024 Japan Machine Training Ltd. All Rights Reserved.")
 
