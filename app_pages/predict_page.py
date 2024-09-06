@@ -10,38 +10,27 @@ import os
 s3_client = boto3.client('s3')
 BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
 
-def load_prediction_history():
+# Load preprocessor pipeline from S3
+def load_pipeline_from_s3():
     try:
-        # Download the prediction history YAML from S3
-        obj = s3_client.get_object(Bucket=BUCKET_NAME, Key="prediction_history.yaml")
-        history = yaml.safe_load(obj['Body']) or []
-    except s3_client.exceptions.NoSuchKey:
-        history = []
+        obj = s3_client.get_object(Bucket=BUCKET_NAME, Key="pipeline/preprocessor_pipeline.pkl")
+        with BytesIO(obj['Body'].read()) as f:
+            pipeline = joblib.load(f)
+        return pipeline
     except Exception as e:
-        st.error(f"Error downloading prediction history from S3: {e}")
-        history = []
-    return history
+        st.error(f"Error loading pipeline from S3: {e}")
+        return None
 
-def save_prediction_to_history(input_data, y_pred, model_choice):
-    # Load the existing history from S3
-    history = load_prediction_history()
-
-    # Prepare the prediction record
-    input_data['Predicted_Churn'] = ['Yes' if x == 1 else 'No' for x in y_pred]
-    prediction_record = {
-        "model": model_choice,
-        "data": input_data.to_dict(orient='records')
-    }
-
-    # Append the new prediction to history
-    history.append(prediction_record)
-
-    # Save the updated history to S3
+# Load model from S3
+def load_model_from_s3(model_key):
     try:
-        history_yaml = yaml.safe_dump(history)
-        s3_client.put_object(Bucket=BUCKET_NAME, Key="prediction_history.yaml", Body=history_yaml)
+        obj = s3_client.get_object(Bucket=BUCKET_NAME, Key=model_key)
+        with BytesIO(obj['Body'].read()) as f:
+            model = joblib.load(f)
+        return model
     except Exception as e:
-        st.error(f"Error saving prediction history to S3: {e}")
+        st.error(f"Error loading model from S3: {e}")
+        return None
 
 def predict_page():
     
@@ -53,7 +42,7 @@ def predict_page():
     with col2:
         st.markdown("<h1 style='font-size: 58px;'>Japan Machine Training Ltd</h1>", unsafe_allow_html=True)
         
-    st.write(" ## Determin if your customer will or will not churn.")
+    st.write(" ## Determine if your customer will or will not churn.")
     
     st.write(" ##### Please Note: The CSV / Excel file you upload should have strictly the below.")
     st.write("""
@@ -72,16 +61,22 @@ def predict_page():
         ("Upload a CSV or Excel file", "Use existing Excel file")
     )
 
-    # Load the preprocessor pipeline
-    preprocessor_pipeline = joblib.load(r'pipeline\preprocessor_pipeline.pkl')
+    # Load the preprocessor pipeline from S3
+    preprocessor_pipeline = load_pipeline_from_s3()
+    if preprocessor_pipeline is None:
+        st.stop()
 
-    # Load the models
-    logistic_regression_model = joblib.load(r'models\logistic_regression_model.pkl')
-    random_forest_model = joblib.load(r'models\random_forest_model.pkl')
+    # Load the models from S3
+    logistic_regression_model = load_model_from_s3("models/logistic_regression_model.pkl")
+    random_forest_model = load_model_from_s3("models/random_forest_model.pkl")
+
+    if logistic_regression_model is None or random_forest_model is None:
+        st.error("Error loading one or both models.")
+        st.stop()
 
     # Choose file based on the user's selection
     if file_choice == "Use existing Excel file":
-        file_path = r"data_files\Telco-churn-last-2000.xlsx"
+        file_path = r"data_files/Telco-churn-last-2000.xlsx"
         input_data = pd.read_excel(file_path)
     else:
         uploaded_file = st.file_uploader("Upload a CSV or Excel file", type=["csv", "xlsx"])
@@ -104,9 +99,6 @@ def predict_page():
             y_pred = logistic_regression_model.predict(X_input)
         else:
             y_pred = random_forest_model.predict(X_input)
-
-        # Save the prediction to history
-        save_prediction_to_history(input_data, y_pred, model_choice)
 
         # Add the predictions to the input data
         input_data['Predicted_Churn'] = ['Yes' if x == 1 else 'No' for x in y_pred]
