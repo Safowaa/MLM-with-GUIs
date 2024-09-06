@@ -49,7 +49,7 @@ def history_page():
         return
 
     # Implementing pagination
-    page_size = 5  # Number of records to show per page
+    page_size = 15  # Number of records to show per page
     total_predictions = len(history)
     total_pages = (total_predictions + page_size - 1) // page_size  # Calculate total pages
 
