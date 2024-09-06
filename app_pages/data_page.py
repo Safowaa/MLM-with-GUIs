@@ -64,7 +64,7 @@ def data_page():
     st.write(" ## Data Used for Training and Testing")
     
     # Load the configuration from YAML file in S3
-    config = load_file_from_s3("config/config.yaml", is_yaml=True)
+    config = load_file_from_s3("config.yaml", is_yaml=True)
     if config is None:
         st.stop()  # Stop if config is not loaded
 
