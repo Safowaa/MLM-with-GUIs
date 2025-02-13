@@ -75,7 +75,7 @@ streamlit run app.py
             GitHub
             </button>
         </a>
-        <a href="www.linkedin.com/in/benedicta-safowaa-asumaning/" target="_blank">
+        <a href="https://www.linkedin.com/in/benedicta-safowaa-asumaning/" target="_blank">
             <button style="background-color:#82b599; color:black; border:none; padding:10px 90px; text-align:center; font-size:18px; margin:2px; cursor:pointer; border-radius:5px;">
             LinkedIn
             </button>
@@ -97,7 +97,7 @@ streamlit run app.py
     # Add copyright notice
     st.write("© 2024 Japan Machine Training Ltd. All Rights Reserved.")
 
-# Run the main page function
+# Call page function
 if __name__ == "__main__":
     main_page()
 

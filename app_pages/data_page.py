@@ -7,7 +7,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 import os
 
-# Function to load a file from S3
+# Function to load a file from AWS bucket
 def load_file_from_s3(file_key, is_yaml=False):
     bucket_name = os.getenv("AWS_BUCKET_NAME")
     
@@ -154,7 +154,7 @@ def data_page():
             mime='image/png'
         )
 
-    # Additional sections for other CSV data (as per your original code)
+    
     # Load and display test data
     test_data = load_csv_from_s3(csv_file_key3)
     if test_data is not None:
@@ -203,6 +203,6 @@ def data_page():
     st.write("© 2024 Japan Machine Training Ltd. All Rights Reserved.")
 
 
-# Call the data_page function when the module is run
+# Call the data_page function 
 if __name__ == "__main__":
     data_page()

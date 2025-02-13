@@ -7,7 +7,7 @@ import boto3
 from io import BytesIO
 import os
 
-# S3 Setup
+# AWS Setup
 s3_client = boto3.client('s3')
 BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
 
@@ -77,7 +77,7 @@ def dashboard_page():
 
     st.write(" ## Below are the visuals from the Python NoteBook ")
 
-    # List of image paths (after the charts)
+    # List of image paths 
     image_paths = [
         r"dashboard_images/Dashboard.png",
         r"dashboard_images/churn_by_contract_type.png",

@@ -6,7 +6,7 @@ import boto3
 from io import BytesIO
 import os
 
-# S3 Setup
+# Aws bucket S3 Setup
 s3_client = boto3.client('s3')
 BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
 
@@ -106,6 +106,19 @@ def predict_page():
         # Display the predictions
         st.write("### Predictions:")
         st.write(input_data)
+        
+        # Save the predictions to the history
+        new_record = {
+            'model': model_used,
+            'data': input_data.to_dict(orient='records')
+        }
+
+        # Load existing history
+        history = load_history_from_s3()
+
+        # Append new prediction and save the history
+        history.insert(0, new_record)  # Add new record at the beginning
+        save_history_to_s3(history)
 
     st.write("---")
     st.write("© 2024 Japan Machine Training Ltd. All Rights Reserved.")

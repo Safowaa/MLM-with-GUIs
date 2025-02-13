@@ -33,7 +33,7 @@ def load_history_from_s3():
         st.error(f"Error downloading prediction history from S3: {str(e)}")
         return []
 
-# Function to save updated history (only 15 records)
+# Function to save updated history 
 def save_history_to_s3(history):
     bucket_name = os.getenv("AWS_BUCKET_NAME")
     s3_file_name = "prediction_history.yaml"

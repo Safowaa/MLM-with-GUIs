@@ -3,7 +3,7 @@ import yaml
 import os
 import boto3
 
-# Function to download users.yaml from S3 bucket
+# Function to download users credentials 
 def download_users_yaml_from_s3():
     s3_client = boto3.client(
         's3',
@@ -11,16 +11,16 @@ def download_users_yaml_from_s3():
         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
         region_name=os.getenv('AWS_REGION')
     )
-    s3_bucket_name = 'mlmyamlbucket'  # Replace with your bucket name
-    s3_file_key = 'users.yaml'  # The S3 key for the file (path in the bucket)
+    s3_bucket_name = 'mlmyamlbucket' 
+    s3_file_key = 'users.yaml'  # The S3 key for the file 
 
     try:
         s3_client.download_file(s3_bucket_name, s3_file_key, 'users.yaml')
-        # st.write("Successfully downloaded users.yaml from S3.")
+        
     except Exception as e:
         st.error(f"Error downloading users.yaml from S3: {e}")
 
-# Function to upload users.yaml to S3 bucket
+# Function to upload users to S3 bucket
 def upload_users_yaml_to_s3():
     s3_client = boto3.client(
         's3',
@@ -28,12 +28,12 @@ def upload_users_yaml_to_s3():
         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
         region_name=os.getenv('AWS_REGION')
     )
-    s3_bucket_name = 'mlmyamlbucket'  # Replace with your bucket name
-    s3_file_key = 'users.yaml'  # The S3 key for the file (path in the bucket)
+    s3_bucket_name = 'mlmyamlbucket' 
+    s3_file_key = 'users.yaml'  # The S3 key for the file
 
     try:
         s3_client.upload_file('users.yaml', s3_bucket_name, s3_file_key)
-        st.write("Successfully uploaded users.yaml to S3.")
+        st.write("Successfull")
     except Exception as e:
         st.error(f"Error uploading users.yaml to S3: {e}")
 
@@ -101,7 +101,7 @@ def login():
                         yaml.dump(users, file)
                     st.success("Account created! Please log in.")
 
-                    # Upload the updated users.yaml back to S3
+                    # Upload the updated users back to S3
                     upload_users_yaml_to_s3()
             else:
                 st.warning("Please fill out all fields.")
